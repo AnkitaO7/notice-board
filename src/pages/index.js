@@ -3,14 +3,24 @@ import { useState } from "react";
 export default function Home() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [category, setCategory] = useState("General");
+  const [priority, setPriority] = useState("Normal");
+  const [publishDate, setPublishDate] = useState("");
+
   const [notices, setNotices] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
 
   // ADD / UPDATE
   const handleAdd = () => {
-    if (!title || !body) return;
+    if (!title || !body || !publishDate) return;
 
-    const newNotice = { title, body };
+    const newNotice = {
+      title,
+      body,
+      category,
+      priority,
+      publishDate,
+    };
 
     if (editIndex !== null) {
       const updated = [...notices];
@@ -21,23 +31,31 @@ export default function Home() {
       setNotices([newNotice, ...notices]);
     }
 
+    // RESET FORM
     setTitle("");
     setBody("");
+    setCategory("General");
+    setPriority("Normal");
+    setPublishDate("");
   };
 
-  // DELETE (BUG FIX INCLUDED)
+  // DELETE
   const handleDelete = (indexToDelete) => {
     const updated = notices.filter((_, index) => index !== indexToDelete);
     setNotices(updated);
-
-    // IMPORTANT FIX: reset edit mode
     setEditIndex(null);
   };
 
   // EDIT
   const handleEdit = (index) => {
-    setTitle(notices[index].title);
-    setBody(notices[index].body);
+    const item = notices[index];
+
+    setTitle(item.title);
+    setBody(item.body);
+    setCategory(item.category);
+    setPriority(item.priority);
+    setPublishDate(item.publishDate);
+
     setEditIndex(index);
   };
 
@@ -65,6 +83,35 @@ export default function Home() {
           onChange={(e) => setBody(e.target.value)}
         />
 
+        {/* CATEGORY */}
+        <select
+          className="border p-2 w-full mb-2 rounded"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option>General</option>
+          <option>Event</option>
+          <option>Exam</option>
+        </select>
+
+        {/* PRIORITY */}
+        <select
+          className="border p-2 w-full mb-2 rounded"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <option>Normal</option>
+          <option>Urgent</option>
+        </select>
+
+        {/* DATE */}
+        <input
+          type="date"
+          className="border p-2 w-full mb-2 rounded"
+          value={publishDate}
+          onChange={(e) => setPublishDate(e.target.value)}
+        />
+
         <button
           onClick={handleAdd}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full"
@@ -80,15 +127,34 @@ export default function Home() {
         {notices.map((item, index) => (
           <div key={index} className="bg-white p-4 rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold mb-2">
+            {/* URGENT BADGE */}
+            <span
+              className={`px-2 py-1 rounded text-white text-sm ${
+                item.priority === "Urgent"
+                  ? "bg-red-500"
+                  : "bg-green-500"
+              }`}
+            >
+              {item.priority}
+            </span>
+
+            <h2 className="text-xl font-semibold mt-3">
               {item.title}
             </h2>
 
-            <p className="text-gray-700 mb-3">
+            <p className="text-gray-700 mt-2">
               {item.body}
             </p>
 
-            <div className="flex gap-2">
+            <p className="mt-2">
+              <strong>Category:</strong> {item.category}
+            </p>
+
+            <p>
+              <strong>Date:</strong> {item.publishDate}
+            </p>
+
+            <div className="flex gap-2 mt-4">
 
               <button
                 onClick={() => handleDelete(index)}
