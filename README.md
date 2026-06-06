@@ -18,34 +18,34 @@ npm run dev
 Open in browser: http://localhost:3000
 
 ## Features
-Add new notices
-Edit existing notices
-Delete notices
-Priority system (Urgent / Normal)
-Category support (General, Event, Exam)
-Date selection with validation
-Sorted notice display (Priority + Latest first)
-Fully responsive UI
+Add new notices  
+Edit existing notices  
+Delete notices  
+Priority system (Urgent / Normal)  
+Category support (General, Event, Exam)  
+Date selection with validation  
+Sorted notice display (Priority + Latest first)  
+Fully responsive UI  
 
 ## Tech Stack
-Next.js (Pages Router)
-React.js
-Prisma ORM
-PostgreSQL
-Tailwind CSS
+Next.js (Pages Router)  
+React.js  
+Prisma ORM  
+PostgreSQL  
+Tailwind CSS  
 Vercel (Deployment)
 
 ## How AI Was Used
-AI tool was used as a development assistant for:
--Debugging Prisma and Vercel deployment issues
--Fixing API and validation logic
--Solving date formatting problems
--Helping structure frontend and backend logic
--Understanding errors during development
+AI tool was used as a development assistant for:  
+-Debugging Prisma and Vercel deployment issues  
+-Fixing API and validation logic  
+-Solving date formatting problems  
+-Helping structure frontend and backend logic  
+-Understanding errors during development  
 AI was used for guidance and support, while the final implementation, testing, and integration were done manually.
 
 ## Deployment
-Deployed on Vercel:
+Deployed on Vercel:  
 [https://notice-board-ruddy.vercel.app](https://notice-board-ruddy.vercel.app)
 
 ## Author
