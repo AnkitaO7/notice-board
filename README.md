@@ -1,40 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 📢 Notice Board App
 
-## Getting Started
+A full-stack Notice Board application built using **Next.js, Prisma, and PostgreSQL**.  
+It allows users to create, read, update, and delete notices with categories, priority, and date management.
 
-First, run the development server:
-
-```bash
+## 🚀 How to Run Locally
+### Clone repository
+git clone https://github.com/AnkitaO7/notice-board.git
+### Go to project folder
+cd notice-board
+### Install dependencies
+npm install
+### Generate Prisma client
+npx prisma generate
+### Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open in browser: http://localhost:3000
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Features
+Add new notices
+Edit existing notices
+Delete notices
+Priority system (Urgent / Normal)
+Category support (General, Event, Exam)
+Date selection with validation
+Sorted notice display (Priority + Latest first)
+Fully responsive UI
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Tech Stack
+Next.js (Pages Router)
+React.js
+Prisma ORM
+PostgreSQL
+Tailwind CSS
+Vercel (Deployment)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## How AI Was Used
+AI tool was used as a development assistant for:
+-Debugging Prisma and Vercel deployment issues
+-Fixing API and validation logic
+-Solving date formatting problems
+-Helping structure frontend and backend logic
+-Understanding errors during development
+AI was used for guidance and support, while the final implementation, testing, and integration were done manually.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
+Deployed on Vercel:
+[https://notice-board-ruddy.vercel.app1](https://notice-board-ruddy.vercel.app)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Author
+Ankita Pandey
