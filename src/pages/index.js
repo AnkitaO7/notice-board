@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -8,175 +8,242 @@ export default function Home() {
   const [publishDate, setPublishDate] = useState("");
 
   const [notices, setNotices] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  // ADD / UPDATE
-  const handleAdd = () => {
-    if (!title || !body || !publishDate) return;
+  // GET DATA
+  useEffect(() => {
+    fetchNotices();
+  }, []);
 
-    const newNotice = {
-      title,
-      body,
-      category,
-      priority,
-      publishDate,
-    };
+  const fetchNotices = async () => {
+    const res = await fetch("/api/notices");
+    const data = await res.json();
+    setNotices(data);
+  };
 
-    if (editIndex !== null) {
-      const updated = [...notices];
-      updated[editIndex] = newNotice;
-      setNotices(updated);
-      setEditIndex(null);
-    } else {
-      setNotices([newNotice, ...notices]);
-    }
-
-    // RESET FORM
+  // RESET FORM
+  const resetForm = () => {
     setTitle("");
     setBody("");
     setCategory("General");
     setPriority("Normal");
     setPublishDate("");
+    setEditId(null);
+  };
+
+  // ADD / UPDATE
+  const handleAdd = async () => {
+    if (!title || !body || !publishDate) return;
+
+    const payload = { title, body, category, priority, publishDate };
+
+    if (editId !== null) {
+      await fetch("/api/notices", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: editId, ...payload }),
+      });
+    } else {
+      await fetch("/api/notices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    }
+
+    resetForm();
+    fetchNotices();
   };
 
   // DELETE
-  const handleDelete = (indexToDelete) => {
-    const updated = notices.filter((_, index) => index !== indexToDelete);
-    setNotices(updated);
-    setEditIndex(null);
+  const handleDelete = async (id) => {
+    const ok = window.confirm("Are you sure you want to delete this notice?");
+    if (!ok) return;
+
+    await fetch("/api/notices", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+
+    if (editId === id) {
+    resetForm(); // form will clear + Update button will become Add
+  }
+
+    fetchNotices();
   };
 
   // EDIT
-  const handleEdit = (index) => {
-    const item = notices[index];
-
+  const handleEdit = (item) => {
     setTitle(item.title);
     setBody(item.body);
     setCategory(item.category);
     setPriority(item.priority);
-    setPublishDate(item.publishDate);
+    setPublishDate(item.publishDate.split("T")[0]);
+    setEditId(item.id);
+  };
 
-    setEditIndex(index);
+  // CANCEL EDIT
+  const cancelEdit = () => {
+    resetForm();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen px-4 py-8 md:px-8 bg-gradient-to-br from-indigo-50 via-white to-pink-50">
 
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Notice Board
-      </h1>
+      <div className="mx-auto max-w-6xl">
 
-      {/* FORM */}
-      <div className="bg-white p-4 rounded-xl shadow max-w-xl mx-auto mb-6">
+        {/* HEADER */}
+        <div className="mb-8 rounded-3xl bg-white p-6 shadow-lg border">
+          <h1 className="text-4xl font-bold text-indigo-700 text-center">
+            📢 Notice Board
+          </h1>
+          <p className="text-center text-gray-500 mt-2">
+            Add, Edit & Delete Notices Easily
+          </p>
+        </div>
 
-        <input
-          className="border p-2 w-full mb-2 rounded"
-          placeholder="Enter Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
 
-        <textarea
-          className="border p-2 w-full mb-2 rounded"
-          placeholder="Enter Body"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        />
+          {/* FORM */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border">
 
-        {/* CATEGORY */}
-        <select
-          className="border p-2 w-full mb-2 rounded"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option>General</option>
-          <option>Event</option>
-          <option>Exam</option>
-        </select>
-
-        {/* PRIORITY */}
-        <select
-          className="border p-2 w-full mb-2 rounded"
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-        >
-          <option>Normal</option>
-          <option>Urgent</option>
-        </select>
-
-        {/* DATE */}
-        <input
-          type="date"
-          className="border p-2 w-full mb-2 rounded"
-          value={publishDate}
-          onChange={(e) => setPublishDate(e.target.value)}
-        />
-
-        <button
-          onClick={handleAdd}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full"
-        >
-          {editIndex !== null ? "Update Notice" : "Add Notice"}
-        </button>
-
-      </div>
-
-      {/* LIST */}
-      <div className="grid gap-4 md:grid-cols-2">
-
-        {notices.map((item, index) => (
-          <div key={index} className="bg-white p-4 rounded-xl shadow">
-
-            {/* URGENT BADGE */}
-            <span
-              className={`px-2 py-1 rounded text-white text-sm ${
-                item.priority === "Urgent"
-                  ? "bg-red-500"
-                  : "bg-green-500"
-              }`}
-            >
-              {item.priority}
-            </span>
-
-            <h2 className="text-xl font-semibold mt-3">
-              {item.title}
+            <h2 className="text-xl font-semibold mb-4 text-indigo-600">
+              {editId ? "Update Notice" : "Add Notice"}
             </h2>
 
-            <p className="text-gray-700 mt-2">
-              {item.body}
-            </p>
+            <input
+              className="w-full mb-3 p-3 border rounded-lg"
+              placeholder="Enter Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-            <p className="mt-2">
-              <strong>Category:</strong> {item.category}
-            </p>
+            <textarea
+              className="w-full mb-3 p-3 border rounded-lg"
+              placeholder="Enter Body"
+              rows={4}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+            />
 
-            <p>
-              <strong>Date:</strong> {item.publishDate}
-            </p>
+            <select
+              className="w-full mb-3 p-3 border rounded-lg"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option>General</option>
+              <option>Event</option>
+              <option>Exam</option>
+            </select>
 
-            <div className="flex gap-2 mt-4">
+            <select
+              className="w-full mb-3 p-3 border rounded-lg"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+            >
+              <option>Normal</option>
+              <option>Urgent</option>
+            </select>
 
+            <input
+              type="date"
+              className="w-full mb-4 p-3 border rounded-lg"
+              value={publishDate}
+              onChange={(e) => setPublishDate(e.target.value)}
+            />
+
+            <button
+              onClick={handleAdd}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700"
+            >
+              {editId ? "Update Notice" : "Add Notice"}
+            </button>
+
+            {editId && (
               <button
-                onClick={() => handleDelete(index)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                onClick={cancelEdit}
+                className="w-full mt-3 bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600"
               >
-                Delete
+                Cancel Edit
               </button>
+            )}
+          </div>
 
-              <button
-                onClick={() => handleEdit(index)}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
-              >
-                Edit
-              </button>
+          {/* LIST */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border">
+
+            <h2 className="text-xl font-bold mb-4">
+              All Notices ({notices.length})
+            </h2>
+
+            <div className="grid gap-4 md:grid-cols-2">
+
+              {notices.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition ${
+                    item.priority === "Urgent"
+                      ? "border-red-300"
+                      : "border-green-300"
+                  }`}
+                >
+
+                  {/* PRIORITY */}
+                  <span
+                    className={`text-white text-xs px-3 py-1 rounded-full ${
+                      item.priority === "Urgent"
+                        ? "bg-red-500"
+                        : "bg-green-500"
+                    }`}
+                  >
+                    {item.priority}
+                  </span>
+
+                  <h3 className="font-bold text-lg mt-2">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-gray-600 mt-1">
+                    {item.body}
+                  </p>
+
+                  <p className="text-sm mt-2">
+                    <b>Category:</b> {item.category}
+                  </p>
+
+                  <p className="text-sm">
+                    <b>Date:</b>{" "}
+                    {new Date(item.publishDate).toLocaleDateString()}
+                  </p>
+
+                  <div className="flex gap-2 mt-3">
+
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="bg-yellow-400 px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                </div>
+              ))}
 
             </div>
 
           </div>
-        ))}
 
+        </div>
       </div>
-
     </div>
   );
 }

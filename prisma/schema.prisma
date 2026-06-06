@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Notice {
-  id          Int      @id @default(autoincrement())
-  title       String
-  body        String
-  category    String
-  priority    String
-  publishDate DateTime
-  createdAt   DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  title          String
+  body           String
+  category       String
+  priority       String
+  priorityWeight Int      @default(1)
+  publishDate    DateTime
+  createdAt      DateTime @default(now())
 }
