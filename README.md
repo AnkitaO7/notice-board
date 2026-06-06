@@ -35,6 +35,14 @@ PostgreSQL
 Tailwind CSS  
 Vercel (Deployment)
 
+## One Improvement I Would Make With More Time
+If I had more time, I would improve:  
+Add authentication (Login/Signup)  
+Role-based access (Admin/User)  
+Better UI using modals instead of alerts/confirms  
+Search and filter functionality  
+Improved date validation and timezone handling  
+
 ## How AI Was Used
 AI tool was used as a development assistant for:  
 -Debugging Prisma and Vercel deployment issues  
