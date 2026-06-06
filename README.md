@@ -1,9 +1,9 @@
-# 📢 Notice Board App
+# Notice Board App
 
 A full-stack Notice Board application built using **Next.js, Prisma, and PostgreSQL**.  
 It allows users to create, read, update, and delete notices with categories, priority, and date management.
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 ### Clone repository
 git clone https://github.com/AnkitaO7/notice-board.git
 ### Go to project folder
@@ -46,7 +46,7 @@ AI was used for guidance and support, while the final implementation, testing, a
 
 ## Deployment
 Deployed on Vercel:
-[https://notice-board-ruddy.vercel.app1](https://notice-board-ruddy.vercel.app)
+[https://notice-board-ruddy.vercel.app](https://notice-board-ruddy.vercel.app)
 
 ## Author
 Ankita Pandey
